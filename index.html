@@ -8,94 +8,31 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         * { box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #f0f2f5;
-            margin: 0;
-            padding: 20px;
-        }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
         .container { max-width: 1000px; margin: auto; }
-
-        header {
-            background: #1a2a3a;
-            color: white;
-            padding: 20px 30px;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+        header { background: #1a2a3a; color: white; padding: 20px 30px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
         header h1 { margin: 0 0 6px; font-size: 1.6rem; }
         #timer { font-size: 0.82rem; color: #a0b0c0; margin: 0; }
-
-        .stats {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            flex: 1;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-        .card h2 { margin: 0 0 8px; font-size: 0.9rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
-        .card p  { font-size: 2rem; font-weight: bold; margin: 0; color: #3498db; }
-
-        .table-wrap {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
+        .stats { display: flex; gap: 16px; margin-bottom: 20px; }
+        .card { background: white; padding: 20px; border-radius: 12px; flex: 1; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .card h2 { margin: 0 0 8px; font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+        .card p { font-size: 1.9rem; font-weight: bold; margin: 0; color: #3498db; }
+        .card p.small { font-size: 1rem; padding-top: 6px; }
+        .table-wrap { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #f0f0f0; }
-        th { background: #2c3e50; color: white; font-size: 0.85rem; letter-spacing: 0.3px; }
+        th { background: #2c3e50; color: white; font-size: 0.85rem; }
         td { font-size: 0.92rem; color: #333; }
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #fafafa; }
-
-        code {
-            background: #eef2f7;
-            padding: 2px 7px;
-            border-radius: 5px;
-            font-size: 0.85rem;
-            color: #2c3e50;
-        }
-
-        .status-tag {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            background: #2ecc71;
-            color: white;
-            letter-spacing: 0.3px;
-        }
-
-        .sin-fecha {
-            color: #e74c3c;
-            font-size: 0.82rem;
-            font-style: italic;
-        }
-
-        .empty-msg {
-            text-align: center;
-            padding: 40px;
-            color: #aaa;
-            font-size: 0.95rem;
-        }
-
-        @media (max-width: 600px) {
-            .stats { flex-direction: column; }
-            th, td { padding: 10px 12px; }
-        }
+        code { background: #eef2f7; padding: 2px 7px; border-radius: 5px; font-size: 0.85rem; color: #2c3e50; }
+        .status-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; background: #2ecc71; color: white; }
+        .sin-fecha { color: #e74c3c; font-size: 0.82rem; font-style: italic; }
+        .empty-msg { text-align: center; padding: 40px; color: #aaa; }
+        @media (max-width: 600px) { .stats { flex-direction: column; } th, td { padding: 10px 12px; } }
     </style>
 </head>
 <body>
-
 <div class="container">
 
     <header>
@@ -104,92 +41,68 @@
     </header>
 
     <div class="stats">
-        <div class="card">
-            <h2>Total Registros</h2>
-            <p id="total-count">—</p>
-        </div>
-        <div class="card">
-            <h2>Último UID</h2>
-            <p id="last-truck" style="font-size:1.2rem; padding-top:8px;">—</p>
-        </div>
-        <div class="card">
-            <h2>Última Entrada</h2>
-            <p id="last-time" style="font-size:1rem; padding-top:8px;">—</p>
-        </div>
+        <div class="card"><h2>Total Registros</h2><p id="total-count">—</p></div>
+        <div class="card"><h2>Último UID</h2><p id="last-uid" class="small">—</p></div>
+        <div class="card"><h2>Última Entrada</h2><p id="last-time" class="small">—</p></div>
     </div>
 
     <div class="table-wrap">
         <table>
-            <thead>
-                <tr>
-                    <th>Fecha y Hora</th>
-                    <th>UID Camión</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
+            <thead><tr><th>Fecha y Hora</th><th>UID Camión</th><th>Estado</th></tr></thead>
             <tbody id="table-body">
                 <tr><td colspan="3" class="empty-msg">Cargando datos...</td></tr>
             </tbody>
         </table>
     </div>
-
 </div>
 
 <script>
-    const firebaseConfig = {
+    firebase.initializeApp({
         databaseURL: "https://truckcounter-85b8c-default-rtdb.firebaseio.com"
-    };
-
-    firebase.initializeApp(firebaseConfig);
+    });
     const db = firebase.database();
 
-    // Formatea timestamp en milisegundos a fecha legible chilena
-    function formatearFecha(ts) {
-        if (!ts) return null;
-        const num = Number(ts);
-        if (isNaN(num) || num === 0) return null;
-        return new Date(num).toLocaleString('es-CL', {
-            day:    '2-digit',
-            month:  '2-digit',
-            year:   'numeric',
-            hour:   '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        });
+    // Convierte "2025-04-25T14:32:07.123" a "25/04/2025 14:32:07"
+    function formatearISO(iso) {
+        if (!iso) return null;
+        // Separamos fecha y hora
+        const [fecha, horaCompleta] = iso.split('T');
+        if (!fecha || !horaCompleta) return null;
+        const [anyo, mes, dia] = fecha.split('-');
+        const hora = horaCompleta.substring(0, 8); // HH:MM:SS
+        return `${dia}/${mes}/${anyo} ${hora}`;
     }
 
     function cargarDatos() {
         db.ref('log_camiones').limitToLast(50).once('value', (snapshot) => {
             const data = snapshot.val();
-            const tableBody = document.getElementById('table-body');
-            tableBody.innerHTML = '';
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
 
             if (!data) {
-                tableBody.innerHTML = '<tr><td colspan="3" class="empty-msg">Sin registros aún.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3" class="empty-msg">Sin registros aún.</td></tr>';
                 document.getElementById('total-count').innerText = '0';
                 return;
             }
 
-            // Ordenar del más reciente al más antiguo
-            const entries = Object.keys(data)
-                .map(key => data[key])
-                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            // Ordenar del más reciente al más antiguo usando fechaHora como string ISO
+            const entries = Object.values(data).sort((a, b) => {
+                const fa = a.fechaHora || '';
+                const fb = b.fechaHora || '';
+                return fb.localeCompare(fa);
+            });
 
             document.getElementById('total-count').innerText = entries.length;
-
-            // Primer registro (más reciente)
-            const primero = entries[0];
-            document.getElementById('last-truck').innerText = primero.uid || '—';
-            const fechaPrimero = formatearFecha(primero.timestamp);
-            document.getElementById('last-time').innerText = fechaPrimero || 'Sin hora';
+            document.getElementById('last-uid').innerText   = entries[0].uid || '—';
+            document.getElementById('last-time').innerText  = formatearISO(entries[0].fechaHora) || '—';
 
             entries.forEach(entry => {
-                const fecha = formatearFecha(entry.timestamp);
+                const fecha = formatearISO(entry.fechaHora);
                 const fechaHTML = fecha
                     ? `<span>${fecha}</span>`
-                    : `<span class="sin-fecha">Sin fecha — actualiza el ESP32</span>`;
+                    : `<span class="sin-fecha">Sin fecha — revisa el ESP32</span>`;
 
-                tableBody.innerHTML += `
+                tbody.innerHTML += `
                     <tr>
                         <td>${fechaHTML}</td>
                         <td><code>${entry.uid || 'Desconocido'}</code></td>
@@ -199,21 +112,15 @@
         });
     }
 
-    // Carga inicial
     cargarDatos();
 
-    // Actualiza cada 5 segundos
     setInterval(() => {
         cargarDatos();
-        const ahora = new Date().toLocaleTimeString('es-CL');
-        document.getElementById('timer').innerText = 'Última actualización: ' + ahora;
+        document.getElementById('timer').innerText =
+            'Última actualización: ' + new Date().toLocaleTimeString('es-CL');
     }, 5000);
 
-    // Escucha cambios en tiempo real (nuevo registro = recarga inmediata)
-    db.ref('log_camiones').on('child_added', () => {
-        cargarDatos();
-    });
+    db.ref('log_camiones').on('child_added', () => cargarDatos());
 </script>
-
 </body>
 </html>
